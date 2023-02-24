@@ -7,4 +7,9 @@ data class Usuario(
     val tipo: Int,
     val nombre: String,
     val apellidos: String,
-)
+) {
+    companion object {
+        val ADMIN = 0
+        val USER = 1
+    }
+}

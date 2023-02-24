@@ -11,11 +11,15 @@ class RetrofitClient private constructor() {
     private var myApi: APIService
 
     init {
-        val gson = GsonBuilder().setLenient().create()
+        val gson = GsonBuilder()
+            .setLenient()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create()
         val retrofit: Retrofit = Retrofit.Builder().baseUrl("http://192.168.8.61/timetracker/api/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         myApi = retrofit.create(APIService::class.java)
+
     }
 
     fun getApi(): APIService {
