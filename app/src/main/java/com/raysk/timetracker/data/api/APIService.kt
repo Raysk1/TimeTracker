@@ -57,4 +57,8 @@ interface APIService {
 
     @DELETE("Materia/{id}")
     fun deleteMateria(@Path("id") id: Int): Call<Void>
+
+    @POST("login")
+    @FormUrlEncoded
+    fun logIn(@Field("username") username: String, @Field("password") password: String) : Call<Usuario>
 }

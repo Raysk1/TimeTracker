@@ -425,4 +425,21 @@ class Services {
         }
     }
 
+    /**
+     * Inicia Sesion desde el API
+     * @param username Nombre de usuario
+     * @param password Contraseña
+     * @throws [HttpException] Cuando la respuesta del servidor no es valida
+     * @throws [SocketTimeoutException] Cuando se agota el tiempo de espera
+     */
+    @Throws(HttpException::class, SocketTimeoutException::class)
+    fun logIn(username: String, password: String){
+        val response = apiService.logIn(username,password).execute()
+        if (response.isSuccessful) {
+            Usuario.actual = response.body()!!
+        } else {
+            throw HttpException(response)
+        }
+    }
+
 }
