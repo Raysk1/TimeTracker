@@ -26,5 +26,26 @@ class Carrera {
          * Ingenieria en Innvocion Agricola Sustentable
          */
         val IIAS = 5
+
+        fun getCarreraLargeName(carrera:Int): String?{
+            return when(carrera){
+                ISC -> "Ingeniria en Sistemas Computacionales"
+                IIAL -> "Ingenieria en Idustrias Alimentarias"
+                INN -> "Ingenieria Industrial"
+                IGE -> "Ingenieria en Gestion Empresarial"
+                IIAS -> "Ingenieria en Innvocion Agricola Sustentable"
+                else -> null
+            }
+        }
+        fun getCarreraShortName(carrera:Int): String?{
+            return when(carrera){
+                ISC -> "ISC"
+                IIAL -> "IIAL"
+                INN -> "INN"
+                IGE -> "IGE"
+                IIAS -> "IIAS"
+                else -> null
+            }
+        }
     }
 }

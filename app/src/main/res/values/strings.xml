@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">TimeTracker</string>
-    <string name="menu_drawer_open">Drawer Open</string>
-    <string name="menu_drawer_close">Drawer Close</string>
-    <string name="ajustes_de_usuario">Ajustes de usuario</string>
+    <string name="base_url">http://192.168.8.61/timetracker/api/</string>
 </resources>
