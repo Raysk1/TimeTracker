@@ -49,10 +49,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.github.thellmund.Android-Week-View:core:5.2.4'
-    implementation 'com.github.thellmund.Android-Week-View:jodatime:5.2.4'
-    implementation 'com.github.thellmund.Android-Week-View:threetenabp:5.2.4'
-    implementation 'com.github.thellmund.Android-Week-View:jsr310:5.2.4'
+    implementation 'com.github.thellmund.Android-Week-View:core:5.3.2'
+    implementation 'com.github.thellmund.Android-Week-View:jodatime:5.3.2'
+    implementation 'com.github.thellmund.Android-Week-View:threetenabp:5.3.2'
+    implementation 'com.github.thellmund.Android-Week-View:jsr310:5.3.2'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation "io.getstream:avatarview-glide:1.0.7"
+    implementation "io.getstream:avatarview-coil:1.0.7"
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
 }

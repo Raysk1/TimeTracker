@@ -23,6 +23,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:textAlignment="center"
+            android:textAllCaps="true"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="22sp"
             android:textStyle="normal|bold"
