@@ -1,52 +1,121 @@
 package com.raysk.timetracker.calendario
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.Menu
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.jsr310.scrollToDateTime
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.raysk.timetracker.R
 import com.raysk.timetracker.data.Materia
 import com.raysk.timetracker.data.Usuario
 import com.raysk.timetracker.data.api.Services
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.time.LocalDateTime
 
+
 class CalendarioActivity : AppCompatActivity() {
-    private val adapter = CalendarioAdapter()
+    private lateinit var adapter: CalendarioAdapter
     private val services = Services()
     private lateinit var weekView: WeekView
     private val scope = CoroutineScope(Dispatchers.Main)
-    private lateinit var dialog: AlertDialog
+    private lateinit var dialogCargando: AlertDialog
     private lateinit var progressBar: ProgressBar
-    private lateinit var tvTitulo: TextView
     private lateinit var tvMensaje: TextView
+    private var materiaList: List<Materia>? = null
+    private lateinit var calendarioEventList: MutableList<CalendarioEvent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendario)
         weekView = findViewById(R.id.weekView)
-        weekView.adapter = adapter
-        configurarPantallaDeCarga()
 
+
+        configurarToolBar()
+        configurarPantallaDeCarga()
         scope.launch { procesarHorarios() }
+        configurarFAB()
 
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun configurarFAB() {
+        val fab: FloatingActionButton = findViewById(R.id.fabCalendario)
+
+        fab.setOnClickListener {
+            var dialog: CalendarioFormDialog? = null
+            dialog = CalendarioFormDialog(this,
+                "Nuevo Evento",
+                materiasList = materiaList!!,
+                onSave = {
+                    calendarioEventList.add(it)
+                    adapter.submitList(calendarioEventList)
+                    dialog?.dismiss()
+                })
+
+            dialog.setOnShowListener {
+                fab.hide()
+            }
+
+            dialog.setOnDismissListener {
+                fab.show()
+            }
+
+            dialog.show()
+
+        }
+
+    }
+
+    private fun configurarToolBar() {
+        val toolBar: MaterialToolbar = findViewById(R.id.toolBarCalendarioForm)
+
+        toolBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_today -> {
+                    weekView.scrollToDateTime(dateTime = LocalDateTime.now())
+                    true
+                }
+                R.id.action_day_view -> {
+                    weekView.numberOfVisibleDays = 1
+                    it.isChecked = true
+                    true
+                }
+                R.id.action_three_day_view -> {
+                    weekView.numberOfVisibleDays = 3
+                    it.isChecked = true
+                    true
+                }
+                R.id.action_week_view -> {
+                    weekView.numberOfVisibleDays = 7
+                    it.isChecked = true
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private suspend fun procesarHorarios() {
         withContext(Dispatchers.IO) {
             try {
                 var horarioList = services.getHorarios()
+                materiaList = services.getMaterias()
                 val userList = mutableMapOf<String, Usuario>()
-                val materiaList = mutableMapOf<Int, Materia>()
 
-                if (horarioList == null) {
+
+                if (horarioList == null || materiaList == null) {
                     return@withContext
                 }
 
@@ -69,93 +138,63 @@ class CalendarioActivity : AppCompatActivity() {
                         usuario
                     }
 
-                    val materia: Materia = if (materiaList.containsKey(it.idMateria)) {
-                        materiaList[it.idMateria]!!
-                    } else {
-                        val materia = services.getMateria(it.idMateria)!!
-                        materiaList[it.idMateria] = materia
-                        materia
-                    }
 
+                    val materia = materiaList!!.find { materia -> materia.id == it.idMateria }
 
-                    val event = CalendarioEvent(it,usuario,materia)
+                    val event = CalendarioEvent(it, usuario, materia!!)
 
                     calendarioEventList.add(event)
 
                     withContext(Dispatchers.Main) {
-                        tvMensaje.setText("Cargando ${index + 1} de ${horarioList.size}")
+                        tvMensaje.text = "Cargando ${index + 1} de ${horarioList.size}"
                         progressBar.progress = index + 1
                     }
                 }
 
+                adapter = CalendarioAdapter(calendarioEventList,materiaList!!)
+                weekView.adapter = adapter
+                this@CalendarioActivity.calendarioEventList = calendarioEventList
                 adapter.submitList(calendarioEventList)
 
                 withContext(Dispatchers.Main) {
-                    tvMensaje.setText("Compleatdo con exito")
+                    tvMensaje.text = "Compleatdo con exito"
                 }
                 delay(2000)
-                dialog.dismiss()
+                dialogCargando.dismiss()
 
             } catch (e: HttpException) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CalendarioActivity, e.message(), Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
+                    Toasty.error(this@CalendarioActivity, e.message(), Toast.LENGTH_SHORT).show()
+                    dialogCargando.dismiss()
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
+                    Toasty.error(
                         this@CalendarioActivity,
                         "Tiempo de espera agotado",
-                        Toast.LENGTH_SHORT
+                        Toasty.LENGTH_SHORT
                     ).show()
-                    dialog.dismiss()
+                    dialogCargando.dismiss()
                 }
             }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
-        menuInflater.inflate(R.menu.calendario_menu, menu)
-        menu?.findItem(R.id.action_today)?.setOnMenuItemClickListener {
-            weekView.scrollToDateTime(dateTime = LocalDateTime.now())
-            true
-        }
-
-        menu?.findItem(R.id.action_day_view)?.setOnMenuItemClickListener {
-            weekView.numberOfVisibleDays = 1
-            it.isChecked = true
-            true
-        }
-
-        menu?.findItem(R.id.action_three_day_view)?.setOnMenuItemClickListener {
-            weekView.numberOfVisibleDays = 3
-            it.isChecked = true
-            true
-        }
-
-        menu?.findItem(R.id.action_week_view)?.setOnMenuItemClickListener {
-            weekView.numberOfVisibleDays = 7
-            it.isChecked = true
-            true
-        }
-
-        return true
-    }
-
+    @SuppressLint("SetTextI18n")
     private fun configurarPantallaDeCarga() {
         val view = layoutInflater.inflate(R.layout.dialog_cargando, null)
-        dialog = AlertDialog.Builder(this)
+        dialogCargando = AlertDialog.Builder(this)
             .setView(view)
             .setCancelable(false)
             .create()
         progressBar = view.findViewById(R.id.progressBar)
-        tvTitulo = view.findViewById(R.id.tvTitulo)
+        val tvTitulo: TextView = view.findViewById(R.id.tvTitulo)
         tvMensaje = view.findViewById(R.id.tvMensajeDeCarga)
 
-        tvTitulo.setText("Obteniendo el calendario")
-        tvMensaje.setText("Por favor espere...")
-        dialog.show()
+        tvTitulo.text = "Obteniendo el calendario"
+        tvMensaje.text = "Por favor espere..."
+        dialogCargando.show()
 
     }
 
