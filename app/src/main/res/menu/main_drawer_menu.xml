@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_user"
+            android:icon="@drawable/ic_user"
+            android:title="@string/ajustes_de_usuario" />
+
+        <item android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_calendar"
+            android:title="Calendario" />
+
+        <item android:id="@+id/nav_request"
+            android:icon="@drawable/ic_calendar_request"
+            android:title="Solicitar laboratorio" />
+
+        <item android:id="@+id/nav_form"
+            android:icon="@drawable/ic_form"
+            android:title="Reportar equipo" />
+
+        <item android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Cerrar sesión" />
+    </group>
+</menu>
