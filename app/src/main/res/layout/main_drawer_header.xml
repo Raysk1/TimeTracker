@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
     android:background="@color/material_dynamic_neutral10">
 
@@ -12,7 +12,9 @@
         android:layout_height="90dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_user"
-        android:background="@color/white">
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        android:padding="5dp"
+        app:strokeWidth="10dp">
 
 
     </ImageView>
