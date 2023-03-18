@@ -18,6 +18,7 @@ import com.raysk.timetracker.data.api.Services
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
 import retrofit2.HttpException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.time.LocalDateTime
 
@@ -40,7 +41,6 @@ class CalendarioActivity : AppCompatActivity() {
 
 
         configurarToolBar()
-        configurarPantallaDeCarga()
         scope.launch { procesarHorarios() }
         configurarFAB()
 
@@ -49,29 +49,32 @@ class CalendarioActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun configurarFAB() {
         val fab: FloatingActionButton = findViewById(R.id.fabCalendario)
-
         fab.setOnClickListener {
-            var dialog: CalendarioFormDialog? = null
-            dialog = CalendarioFormDialog(this,
-                "Nuevo Evento",
-                materiasList = materiaList!!,
-                onSave = {
+            if (materiaList != null) {
+                val dialog = CalendarioFormDialog(
+                    this,
+                    "Nuevo Evento",
+                    materiaList!!
+                ) {
+                    //onSave
                     calendarioEventList.add(it)
                     adapter.submitList(calendarioEventList)
-                    dialog?.dismiss()
-                })
+                }
 
-            dialog.setOnShowListener {
-                fab.hide()
+                dialog.setOnShowListener {
+                    fab.hide()
+                }
+
+                dialog.setOnDismissListener {
+                    fab.show()
+                }
+
+                dialog.show()
+            } else {
+                Toasty.info(this, "Por favor recarga el calendario", Toasty.LENGTH_SHORT).show()
             }
-
-            dialog.setOnDismissListener {
-                fab.show()
-            }
-
-            dialog.show()
-
         }
+
 
     }
 
@@ -81,7 +84,7 @@ class CalendarioActivity : AppCompatActivity() {
         toolBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_today -> {
-                    weekView.scrollToDateTime(dateTime = LocalDateTime.now())
+                    weekView.scrollToDateTime(LocalDateTime.now())
                     true
                 }
                 R.id.action_day_view -> {
@@ -99,6 +102,10 @@ class CalendarioActivity : AppCompatActivity() {
                     it.isChecked = true
                     true
                 }
+                R.id.action_reload -> {
+                    scope.launch { procesarHorarios() }
+                    true
+                }
                 else -> {
                     true
                 }
@@ -108,6 +115,7 @@ class CalendarioActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private suspend fun procesarHorarios() {
+        configurarPantallaDeCarga()
         withContext(Dispatchers.IO) {
             try {
                 var horarioList = services.getHorarios()
@@ -151,7 +159,7 @@ class CalendarioActivity : AppCompatActivity() {
                     }
                 }
 
-                adapter = CalendarioAdapter(calendarioEventList,materiaList!!)
+                adapter = CalendarioAdapter(calendarioEventList, materiaList!!)
                 weekView.adapter = adapter
                 this@CalendarioActivity.calendarioEventList = calendarioEventList
                 adapter.submitList(calendarioEventList)
@@ -172,6 +180,15 @@ class CalendarioActivity : AppCompatActivity() {
                     Toasty.error(
                         this@CalendarioActivity,
                         "Tiempo de espera agotado",
+                        Toasty.LENGTH_SHORT
+                    ).show()
+                    dialogCargando.dismiss()
+                }
+            } catch (e: ConnectException) {
+                withContext(Dispatchers.Main) {
+                    Toasty.error(
+                        this@CalendarioActivity,
+                        "Sin conexion a internet",
                         Toasty.LENGTH_SHORT
                     ).show()
                     dialogCargando.dismiss()

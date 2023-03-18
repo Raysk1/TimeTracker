@@ -32,29 +32,36 @@ class CalendarioAdapter(
 
     override fun onEventClick(data: CalendarioEvent, bounds: RectF) {
         var infoDialog = AlertDialog.Builder(context).create()
-        infoDialog = data.getInfoDialog(context, listenerPositiveDelete = { _, _ ->
-            CoroutineScope(Dispatchers.Main).launch {
-                if (data.deleteEvent(context)) {
-                    calendarList.remove(data)
-                    submitList(calendarList)
-                    infoDialog.setCancelable(false)
-                    infoDialog.dismiss()
+        infoDialog = data.getInfoDialog(context, materiasList,
+            listenerPositiveDelete = { _, _ ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (data.deleteEvent(context)) {
+                        calendarList.remove(data)
+                        submitList(calendarList)
+                        infoDialog.setCancelable(false)
+                        infoDialog.dismiss()
+                    }
                 }
-            }
 
-        })
+            },
+            onEdit = {
+                calendarList.remove(data)
+
+                calendarList.add(it)
+
+                submitList(calendarList)
+            })
         infoDialog.show()
 
 
     }
 
     override fun onEmptyViewClick(time: Calendar) {
-        var dialog: CalendarioFormDialog? = null
-        dialog = CalendarioFormDialog(context, "Nuevo evento", time = time, onSave = {
+        val dialog = CalendarioFormDialog(context, time, "Nuevo evento", materiasList) {
+            //onSave()
             calendarList.add(it)
             submitList(calendarList)
-            dialog?.dismiss()
-        }, materiasList = materiasList)
+        }
 
         dialog.show()
     }

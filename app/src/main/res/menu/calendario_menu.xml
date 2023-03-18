@@ -4,6 +4,12 @@
     tools:context=".ButtonNavigation">
 
     <item
+        android:id="@+id/action_reload"
+        android:icon="@drawable/ic_reload"
+        android:orderInCategory="100"
+        android:title="Recargar"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_today"
         android:icon="@drawable/ic_event"
         android:orderInCategory="100"

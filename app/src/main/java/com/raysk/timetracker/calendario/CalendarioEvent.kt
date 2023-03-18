@@ -1,11 +1,11 @@
 package com.raysk.timetracker.calendario
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,6 +21,7 @@ import io.getstream.avatarview.coil.loadImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +31,7 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
     var fechaFin: Calendar = Calendar.getInstance()
     var fechaInicio: Calendar = Calendar.getInstance()
     var color: Int = 0
+    private val service = Services()
 
     private val colores = arrayOf(
         "#0F4C81",
@@ -76,7 +78,7 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
 
         try {
             withContext(Dispatchers.IO) {
-                val service = Services()
+
                 service.deleteHorario(horario.id)
             }
 
@@ -90,16 +92,25 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
         } catch (e: SocketTimeoutException) {
             Toasty.error(context, "Tiempo de espera agotado", Toasty.LENGTH_SHORT).show()
             return false
+        } catch (e: ConnectException) {
+            Toasty.error(
+                context,
+                "Sin conexion a internet",
+                Toasty.LENGTH_SHORT
+            ).show()
+            return false
         }
 
     }
 
+    @SuppressLint("SetTextI18n")
     fun getInfoDialog(
         context: Context,
+        materiasList: List<Materia>,
+        onEdit: (calendarioEvent: CalendarioEvent) -> Unit,
         listenerPositiveDelete: DialogInterface.OnClickListener? = null,
         listenerNegativeDelete: DialogInterface.OnClickListener? = null,
-        listenerEdit: View.OnClickListener? = null
-    ) : AlertDialog{
+    ): AlertDialog {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_calendario_event_info, null)
         val infoDialog = AlertDialog.Builder(context)
             .setView(view)
@@ -107,7 +118,7 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
 
 
         val avatarView = view.findViewById<AvatarView>(R.id.avatarView)
-        val url = "http://192.168.31.117/timetracker/api/img/usuario/${usuario.username}"
+        val url = "http://192.168.8.61/timetracker/api/img/usuario/${usuario.username}"
         avatarView.loadImage(data = url,
             onError = { _, _ ->
                 avatarView.avatarInitials = "${usuario.nombre[0]}${usuario.apellidos[0]}"
@@ -126,13 +137,16 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
             MaterialAlertDialogBuilder(context)
                 .setTitle("Confirmar")
                 .setMessage("¿Desea eliminar este evento?")
-                .setPositiveButton("Si",listenerPositiveDelete)
-                .setNegativeButton("No",listenerNegativeDelete)
+                .setPositiveButton("Si", listenerPositiveDelete)
+                .setNegativeButton("No", listenerNegativeDelete)
                 .create()
                 .show()
         }
 
-        btnEditar.setOnClickListener(listenerEdit)
+        btnEditar.setOnClickListener {
+            getEditDialog(context, materiasList, onEdit)
+            infoDialog.dismiss()
+        }
 
         val format = SimpleDateFormat("HH:mm", Locale.ROOT)
         val horaInicio = format.format(fechaInicio.time)
@@ -147,5 +161,17 @@ class CalendarioEvent(val horario: Horario, val usuario: Usuario, val materia: M
         return infoDialog
 
 
+    }
+
+    fun getEditDialog(
+        context: Context,
+        materiasList: List<Materia>,
+        onEdit: (calendarioEvent: CalendarioEvent) -> Unit,
+    ) {
+        val dialog = CalendarioFormDialog(context, this, "Editar evento", materiasList) {
+            //onSave()
+            onEdit(it)
+        }
+        dialog.show()
     }
 }
