@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.time.LocalDate
 import java.time.LocalTime
@@ -29,8 +30,6 @@ import java.util.*
 class CalendarioFormDialog(
     context: Context,
     private val title: String,
-    private val calendarioEvent: CalendarioEvent? = null,
-    private val time: Calendar? = null,
     private val materiasList: List<Materia>,
     private val onSave: (calendarioEvent: CalendarioEvent) -> Unit,
 ) : AlertDialog(context) {
@@ -43,6 +42,50 @@ class CalendarioFormDialog(
     private lateinit var btnCerrar: ImageButton
     private lateinit var materia: Materia
     private lateinit var tfMateriasAcTv: AutoCompleteTextView
+    private val calendar = Calendar.getInstance()
+    private var hourEnd: Int = 0
+    private var hourStart: Int = 0
+    private var calendarioEvent: CalendarioEvent? = null
+    private var year = calendar.get(Calendar.YEAR)
+    private var month = calendar.get(Calendar.MONTH)
+    private var day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    init {
+        hourStart = calendar.get(Calendar.HOUR_OF_DAY)
+        hourEnd = hourStart + 1
+    }
+
+    constructor(
+        context: Context,
+        time: Calendar,
+        title: String,
+        materiasList: List<Materia>,
+        onSave: (calendarioEvent: CalendarioEvent) -> Unit,
+    ) : this(context, title, materiasList, onSave) {
+        hourStart = time.get(Calendar.HOUR_OF_DAY)
+        hourEnd = hourStart + 1
+        year = time.get(Calendar.YEAR)
+        month = time.get(Calendar.MONTH)
+        day = time.get(Calendar.DAY_OF_MONTH)
+    }
+
+    constructor(
+        context: Context,
+        calendarioEvent: CalendarioEvent,
+        title: String,
+        materiasList: List<Materia>,
+        onSave: (calendarioEvent: CalendarioEvent) -> Unit,
+    ) : this(context, title, materiasList, onSave) {
+        val calendar = Calendar.getInstance()
+        calendar.time = calendarioEvent.horario.fechaInicio
+        hourStart = calendar.get(Calendar.HOUR_OF_DAY)
+        calendar.time = calendarioEvent.horario.fechaFin
+        hourEnd = calendar.get(Calendar.HOUR_OF_DAY)
+        year = calendar.get(Calendar.YEAR)
+        month = calendar.get(Calendar.MONTH)
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        this.calendarioEvent = calendarioEvent
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,45 +101,34 @@ class CalendarioFormDialog(
         btnGuardar = findViewById(R.id.btnGuardar)
         tfMateriasAcTv = (tfMaterias.editText as AutoCompleteTextView?)!!
 
+
         tvTitulo.text = title
 
-        var c = Calendar.getInstance()
-        val hourEnd: Int
-        val hourStart: Int
-
-
-        //Configurando datos de la UI
-        if (calendarioEvent != null) {
-            c.time = calendarioEvent.horario.fechaInicio
-            hourStart = c.get(Calendar.HOUR_OF_DAY)
-            c.time = calendarioEvent.horario.fechaFin
-            hourEnd = c.get(Calendar.HOUR_OF_DAY)
-        } else if (time != null) {
-            c = time
-            hourStart = time.get(Calendar.HOUR_OF_DAY)
-            hourEnd = hourStart + 1
-        } else {
-            hourStart = c.get(Calendar.HOUR_OF_DAY)
-            hourEnd = hourStart + 1
-        }
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
 
         val fecha = "${"%02d".format(day)}/${"%02d".format(month + 1)}/$year"
         tfFecha.editText?.setText(fecha)
         tfhoraInicio.editText?.setText("${"%02d".format(hourStart)}:00")
         tfHoraFin.editText?.setText("${"%02d".format(hourEnd)}:00")
 
-        val nombresMaterias = materiasList.map { it.nombre }
-        val adapter = ArrayAdapter(context, R.layout.list_item, nombresMaterias)
+
+        configurarBotones()
+
+
+    }
+
+    private fun configurarBotones() {
+
+        val adapter = ArrayAdapter(context, R.layout.list_item, materiasList)
 
         tfMateriasAcTv.setAdapter(adapter)
+        if (calendarioEvent != null) {
+            materia = calendarioEvent!!.materia
+            tfMateriasAcTv.setText(materia.nombre)
+        }
+
         tfMateriasAcTv.setOnItemClickListener { _, _, pos, _ ->
             materia = materiasList[pos]
         }
-
-
 
         btnGuardar.setOnClickListener {
 
@@ -122,55 +154,9 @@ class CalendarioFormDialog(
                 return@setOnClickListener
             }
 
-            val services = Services()
-
-            CoroutineScope(Dispatchers.Main).launch {
-
-                try {
-                    var message: String
-                    setCancelable(false)
-                    var hor: Horario
-                    //TODO: una vez hecho el inicio de sesion poner el id del usuario
-                    val user = Usuario("lolps0", "22", Usuario.USER, "goku", "abeles")
-                    withContext(Dispatchers.IO) {
-
-                        if (calendarioEvent == null) {
-                            hor =
-                                services.createHorario(
-                                    fechaInicio,
-                                    fechaFin,
-                                    user.username,
-                                    materia.id
-                                )!!
-                            message = "Evento creado exitosamente"
-                        } else {
-                            hor = services.updateHorario(
-                                calendarioEvent.horario.id,
-                                fechaInicio,
-                                fechaFin,
-                                user.username,
-                                materia.id
-                            )!!
-
-                            message = "Evento actualizado correctamente"
-                        }
-                    }
 
 
-                    val calEv = CalendarioEvent(hor, user, materia)
-
-                    Toasty.success(context, message, Toasty.LENGTH_SHORT).show()
-                    setCancelable(true)
-                    onSave(calEv)
-                } catch (e: HttpException) {
-                    Toasty.error(context, e.message(), Toast.LENGTH_SHORT).show()
-                    setCancelable(true)
-                } catch (e: SocketTimeoutException) {
-                    Toasty.error(context, "Tiempo de espera agotado", Toasty.LENGTH_SHORT).show()
-                    setCancelable(true)
-                }
-
-            }
+            CoroutineScope(Dispatchers.Main).launch { guardar(fechaInicio, fechaFin) }
 
         }
 
@@ -228,7 +214,6 @@ class CalendarioFormDialog(
         }
 
         btnCerrar.setOnClickListener { dismiss() }
-
     }
 
     private fun comprobarCampos(
@@ -241,7 +226,10 @@ class CalendarioFormDialog(
             tfMaterias.error = "Seleccione una opcion"
             comprobado = false
         }
-        if (fechaInicio.time > fechaFin.time) {
+        if (fechaInicio.time < calendar.timeInMillis) {
+            tfhoraInicio.error = "La hora no puede ser anterior a la actual"
+            comprobado = false
+        } else if (fechaInicio.time > fechaFin.time) {
             tfhoraInicio.error = "La hora de inicio no puede ser menor á la hora de fin"
             comprobado = false
         } else if (fechaInicio.time == fechaFin.time) {
@@ -249,6 +237,62 @@ class CalendarioFormDialog(
             comprobado = false
         }
         return comprobado
+    }
+
+    private suspend fun guardar(fechaInicio: Date, fechaFin: Date) {
+        val services = Services()
+        try {
+            var message: String
+            setCancelable(false)
+            var hor: Horario
+            //TODO: una vez hecho el inicio de sesion poner el id del usuario
+            val user = Usuario("lolps0", "22", Usuario.USER, "goku", "abeles")
+
+
+            withContext(Dispatchers.IO) {
+
+                if (calendarioEvent == null) {
+                    hor =
+                        services.createHorario(
+                            fechaInicio,
+                            fechaFin,
+                            user.username,
+                            materia.id
+                        )!!
+                    message = "Evento creado exitosamente"
+                } else {
+                    hor = services.updateHorario(
+                        calendarioEvent!!.horario.id,
+                        fechaInicio,
+                        fechaFin,
+                        user.username,
+                        materia.id
+                    )!!
+
+                    message = "Evento actualizado correctamente"
+                }
+            }
+
+
+            val calEv = CalendarioEvent(hor, user, materia)
+
+            Toasty.success(context, message, Toasty.LENGTH_SHORT).show()
+            setCancelable(true)
+            onSave(calEv)
+            dismiss()
+        } catch (e: HttpException) {
+            Toasty.error(context, e.message(), Toast.LENGTH_SHORT).show()
+            setCancelable(true)
+        } catch (e: SocketTimeoutException) {
+            Toasty.error(context, "Tiempo de espera agotado", Toasty.LENGTH_SHORT).show()
+            setCancelable(true)
+        } catch (e: ConnectException) {
+            Toasty.error(
+                context,
+                "Sin conexion a internet",
+                Toasty.LENGTH_SHORT
+            ).show()
+        }
     }
 }
 
