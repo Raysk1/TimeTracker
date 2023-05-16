@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login.LoginActivity">
+    tools:context=".data.api.Login.LoginActivity">
 
     <EditText
         android:id="@+id/etUserName"
-        android:layout_width="346dp"
-        android:layout_height="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:ems="10"
         android:hint="Usuario"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="Contraseña"
+        android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/etUserName"
         app:layout_constraintHorizontal_bias="0.0"
@@ -58,8 +58,8 @@
 
     <TextView
         android:id="@+id/tvRegistro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="172dp"
+        android:layout_height="19dp"
         android:layout_marginTop="52dp"
         android:text="¿No tienes una cuenta?"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,8 +69,8 @@
 
     <TextView
         android:id="@+id/tvRegistrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="107dp"
+        android:layout_height="22dp"
         android:clickable="true"
         android:text="Regístrate."
         app:layout_constraintBottom_toBottomOf="@+id/tvRegistro"

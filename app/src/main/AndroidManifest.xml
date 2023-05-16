@@ -16,10 +16,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Login.Registro"
+            android:name=".data.api.Login.Registro"
             android:exported="false" />
         <activity
-            android:name=".Login.LoginActivity"
+            android:name=".data.api.Login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
