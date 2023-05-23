@@ -3,6 +3,8 @@ package com.raysk.timetracker.data
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+
+
 data class Horario(
     @SerializedName("fecha_fin")
     val fechaFin: Date,
