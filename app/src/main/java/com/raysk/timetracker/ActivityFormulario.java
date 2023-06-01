@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -17,7 +18,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import java.util.Calendar;
 
 public class ActivityFormulario extends AppCompatActivity {
-    private Button btnFecha,btnHora;
+    private Button btnFecha,btnHora, btnSolicitar;
 
     private EditText etHora, etFecha;
     private TextView tvSeleccion,tvMateria,tvMaestro;
@@ -29,6 +30,7 @@ public class ActivityFormulario extends AppCompatActivity {
 
         btnFecha = findViewById(R.id.btnFecha);
         btnHora = findViewById(R.id.btnHora);
+        btnSolicitar = findViewById(R.id.btnSolicitar);
         etHora = findViewById(R.id.etHora);
         etFecha = findViewById(R.id.etFecha);
         tvSeleccion = findViewById(R.id.tvSeleccion);
@@ -72,6 +74,12 @@ public class ActivityFormulario extends AppCompatActivity {
                         }, hour, minute, false);
 
                 timePickerDialog.show();
+            }
+        });
+        btnSolicitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ActivityFormulario.this, "Solicitud Enviada", Toast.LENGTH_LONG).show();
             }
         });
     }
