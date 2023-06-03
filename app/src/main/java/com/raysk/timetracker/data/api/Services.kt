@@ -3,6 +3,7 @@ package com.raysk.timetracker.data.api
 import com.raysk.timetracker.data.Horario
 import com.raysk.timetracker.data.Materia
 import com.raysk.timetracker.data.Usuario
+import com.raysk.timetracker.data.preferences.SettingPreferences
 import retrofit2.Call
 import retrofit2.HttpException
 import java.net.ConnectException
@@ -461,6 +462,7 @@ class Services {
         val response = apiService.logIn(username, password).execute()
         if (response.isSuccessful) {
             Usuario.actual = response.body()!!
+
         } else {
             throw HttpException(response)
         }

@@ -11,6 +11,6 @@ data class Usuario(
     companion object {
         val ADMIN = 0
         val USER = 1
-        lateinit var actual: Usuario
+        var actual: Usuario? = null
     }
 }

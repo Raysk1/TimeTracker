@@ -245,8 +245,8 @@ class CalendarioFormDialog(
             var message: String
             setCancelable(false)
             var hor: Horario
-            //TODO: una vez hecho el inicio de sesion poner el id del usuario
-            val user = Usuario("lolps0", "22", Usuario.USER, "goku", "abeles")
+
+            val user = Usuario.actual!!
 
 
             withContext(Dispatchers.IO) {

@@ -28,5 +28,9 @@ class SettingPreferences(val context: Context) {
         }
     }
 
+    fun delete(){
+        context.getSharedPreferences("user",Context.MODE_PRIVATE).edit().remove(USER_PREFERENCE_KEY).apply()
+    }
+
 
 }

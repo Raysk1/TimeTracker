@@ -61,4 +61,5 @@ dependencies {
     implementation 'com.github.thellmund.Android-Week-View:jodatime:5.3.2'
     implementation 'com.github.thellmund.Android-Week-View:threetenabp:5.3.2'
     implementation 'com.github.thellmund.Android-Week-View:jsr310:5.3.2'
+    implementation 'com.github.koushikcse:LoadingButton:1.7'
 }

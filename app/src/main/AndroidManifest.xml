@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,14 +15,13 @@
         android:theme="@style/Theme.TimeTracker"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".login.LoginActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.TimeTracker" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".DrawerNavActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,9 +30,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".calendario.CalendarioActivity"
-            android:exported="false" />
+            android:name=".DrawerNavActivity"
+            android:exported="false">
 
+        </activity>
     </application>
 
 </manifest>
