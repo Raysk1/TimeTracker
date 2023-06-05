@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".configuracion.ConfiguracionFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#C4D3C5C5"
@@ -27,32 +28,27 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="262dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="32dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginBottom="35dp"
             android:backgroundTint="#0A716C6C"
             android:drawableLeft="@drawable/baseline_exit_to_app_24"
             android:text="Cerrar Sesión"
             android:textColor="#FD0C0C0C"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnNombre"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintEnd_toEndOf="@+id/btnNombre2"
+            app:layout_constraintStart_toStartOf="@+id/btnNombre2" />
 
         <Button
             android:id="@+id/btnConfigurancionEmail"
-            android:layout_width="355dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
             android:backgroundTint="#BFFFFFFF"
             android:drawableLeft="@drawable/baseline_email_24"
-            android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
 
+            android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
             android:fontFamily="sans-serif"
             android:text="Cambiar Correo"
             android:textAlignment="textStart"
@@ -60,17 +56,15 @@
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btnNombre"
+            app:layout_constraintStart_toStartOf="@+id/btnNombre"
             app:layout_constraintTop_toBottomOf="@+id/btnNombre" />
 
         <Button
             android:id="@+id/btnNombre2"
-            android:layout_width="355dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
             android:backgroundTint="#BFFFFFFF"
             android:drawableLeft="@drawable/baseline_help_outline_24"
             android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
@@ -82,17 +76,15 @@
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btnConfigurancionContraseña"
+            app:layout_constraintStart_toStartOf="@+id/btnConfigurancionContraseña"
             app:layout_constraintTop_toBottomOf="@+id/btnConfigurancionContraseña" />
 
         <Button
             android:id="@+id/btnConfigurancionContraseña"
-            android:layout_width="355dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
             android:backgroundTint="#BFFFFFFF"
             android:drawableLeft="@drawable/baseline_lock_24"
             android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
@@ -104,8 +96,8 @@
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btnConfigurancionEmail"
+            app:layout_constraintStart_toStartOf="@+id/btnConfigurancionEmail"
             app:layout_constraintTop_toBottomOf="@+id/btnConfigurancionEmail" />
 
         <TextView
@@ -125,16 +117,15 @@
 
         <Button
             android:id="@+id/btnNombre"
-            android:layout_width="355dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="152dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
             android:backgroundTint="#BFFFFFFF"
             android:drawableLeft="@drawable/baseline_account_circle_24"
+
             android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
             android:fontFamily="sans-serif"
-
             android:text="Cambiar Nombre"
             android:textAlignment="textStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -142,8 +133,9 @@
             android:textSize="20sp"
             android:textStyle="normal"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -154,8 +146,16 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.779"
+            app:layout_constraintVertical_bias="0.765"
             app:srcCompat="@drawable/baseline_photo_camera_24" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="154dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

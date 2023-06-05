@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".configuracion.EMailFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#C4D3C5C5"
@@ -15,27 +16,25 @@
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="241dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="380dp"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginBottom="35dp"
             android:backgroundTint="#0A716C6C"
-            android:text="Button"
+            android:text="Aceptar"
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2"
-            app:layout_constraintVertical_bias="0.446" />
+            app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress2" />
 
         <EditText
             android:id="@+id/editTextTextEmailAddress"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="347dp"
+            android:layout_width="0dp"
             android:layout_height="67dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="120dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/custom_impot"
             android:drawableLeft="@drawable/baseline_email_24"
             android:ems="10"
@@ -51,9 +50,9 @@
         <EditText
             android:id="@+id/editTextTextEmailAddress2"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="347dp"
+            android:layout_width="0dp"
             android:layout_height="67dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_impot"
             android:drawableLeft="@drawable/baseline_email_24"
             android:ems="10"
@@ -62,16 +61,9 @@
             android:padding="16dp"
             android:textAlignment="center"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+            app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
             app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="205dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
