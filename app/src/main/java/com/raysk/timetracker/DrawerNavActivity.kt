@@ -41,7 +41,7 @@ class DrawerNavActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_calendar
+                R.id.nav_calendar, R.id.nav_reporte
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -62,6 +62,10 @@ class DrawerNavActivity : AppCompatActivity() {
                 R.id.nav_calendar -> {
                     navController.navigate(R.id.nav_calendar)
                     drawerLayout.closeDrawers()
+                }
+                R.id.nav_form ->{
+                    navController.navigate(R.id.nav_reporte)
+                    drawerLayout.close()
                 }
             }
             true

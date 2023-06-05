@@ -10,4 +10,9 @@
         android:name="com.raysk.timetracker.calendario.CalendarioFragment"
         android:label="Calendario"
         tools:layout="@layout/fragment_calendario" />
+    <fragment
+        android:id="@+id/nav_reporte"
+        android:name="com.raysk.timetracker.reporte.ReporteFragment"
+        android:label="fragment_reporte"
+        tools:layout="@layout/fragment_reporte" />
 </navigation>
