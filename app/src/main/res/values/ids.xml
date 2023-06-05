@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="btnConfigurancionEmail" type="id" />
+    <item name="btnNombre2" type="id" />
+    <item name="btnConfigurancionContraseña" type="id" />
+    <item name="imageButton" type="id" />
+</resources>
