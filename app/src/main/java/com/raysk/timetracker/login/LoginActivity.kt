@@ -2,6 +2,7 @@ package com.raysk.timetracker.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.kusu.loadingbutton.LoadingButton
@@ -37,13 +38,17 @@ class LoginActivity : AppCompatActivity() {
             scope.launch {
                 withContext(Dispatchers.IO){
                     try {
-                        services.logIn(username,password)
-                        withContext(Dispatchers.Main){
-                            val intent = Intent(this@LoginActivity,DrawerNavActivity::class.java)
-                            startActivity(intent)
-                            val preferences = SettingPreferences(this@LoginActivity)
-                            preferences.save(Usuario.actual!!)
-                            this@LoginActivity.finish()
+                        if (username.isEmpty() || password.isEmpty()) {
+                            Toast.makeText(this@LoginActivity, "Por favor llena todos los espacios", Toast.LENGTH_SHORT).show()
+                        } else{
+                            services.logIn(username,password)
+                            withContext(Dispatchers.Main) {
+                                val intent = Intent(this@LoginActivity, DrawerNavActivity::class.java)
+                                startActivity(intent)
+                                val preferences = SettingPreferences(this@LoginActivity)
+                                preferences.save(Usuario.actual!!)
+                                this@LoginActivity.finish()
+                            }
                         }
                     }catch (e: Exception){
                        withContext(Dispatchers.Main){
