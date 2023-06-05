@@ -16,8 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
     lateinit var tilUsername: TextInputLayout
@@ -36,24 +34,31 @@ class LoginActivity : AppCompatActivity() {
             val password = tilPassword.editText?.text.toString()
             val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
-                withContext(Dispatchers.IO){
+                withContext(Dispatchers.IO) {
                     try {
                         if (username.isEmpty() || password.isEmpty()) {
-                            Toast.makeText(this@LoginActivity, "Por favor llena todos los espacios", Toast.LENGTH_SHORT).show()
-                        } else{
-                            services.logIn(username,password)
                             withContext(Dispatchers.Main) {
-                                val intent = Intent(this@LoginActivity, DrawerNavActivity::class.java)
+                                Toasty.warning(
+                                    this@LoginActivity,
+                                    "Por favor llena todos los espacios",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                services.logIn(username, password)
+                                val intent =
+                                    Intent(this@LoginActivity, DrawerNavActivity::class.java)
                                 startActivity(intent)
                                 val preferences = SettingPreferences(this@LoginActivity)
                                 preferences.save(Usuario.actual!!)
                                 this@LoginActivity.finish()
                             }
                         }
-                    }catch (e: Exception){
-                       withContext(Dispatchers.Main){
-                           Toasty.error(this@LoginActivity,e.message!!,Toasty.LENGTH_LONG).show()
-                       }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toasty.error(this@LoginActivity, e.message!!, Toasty.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

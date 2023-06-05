@@ -15,4 +15,24 @@
         android:name="com.raysk.timetracker.reporte.ReporteFragment"
         android:label="fragment_reporte"
         tools:layout="@layout/fragment_reporte" />
+    <fragment
+        android:id="@+id/nav_config"
+        android:name="com.raysk.timetracker.configuracion.ConfiguracionFragment"
+        android:label="fragment_configuracion"
+        tools:layout="@layout/fragment_configuracion" />
+    <fragment
+        android:id="@+id/EMailFragment"
+        android:name="com.raysk.timetracker.configuracion.EMailFragment"
+        android:label="fragment_e_mail"
+        tools:layout="@layout/fragment_e_mail" />
+    <fragment
+        android:id="@+id/nombreFragment"
+        android:name="com.raysk.timetracker.configuracion.NombreFragment"
+        android:label="fragment_nombre"
+        tools:layout="@layout/fragment_nombre" />
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.raysk.timetracker.configuracion.PasswordFragment"
+        android:label="fragment_password"
+        tools:layout="@layout/fragment_password" />
 </navigation>
