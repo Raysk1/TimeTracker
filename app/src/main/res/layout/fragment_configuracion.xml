@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="#C4D3C5C5"
         android:backgroundTint="#A4807A7A"
-        tools:context=".activity_configuracion_main">
+        tools:context=".activity_configuration_main">
 
         <ImageView
             android:id="@+id/imageView"
