@@ -21,18 +21,25 @@
             android:label="@string/title_activity_login"
             android:theme="@style/Base.Theme.TimeTracker" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity_configuracion_main"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".DrawerNavActivity"
             android:exported="false">
-
+        </activity>
+        <activity
+            android:name=".ConfigurancionPassword"
+            android:exported="false" />
+        <activity
+            android:name=".ConfigurancionEMail"
+            android:exported="false" />
+        <activity
+            android:name=".configurancionnombre"
+            android:exported="false" />
+        <activity
+            android:name=".activity_configuracion_main"
+            android:exported="false">
         </activity>
     </application>
 
