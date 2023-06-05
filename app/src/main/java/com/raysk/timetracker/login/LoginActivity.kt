@@ -45,8 +45,8 @@ class LoginActivity : AppCompatActivity() {
                                 ).show()
                             }
                         } else {
+                            services.logIn(username, password)
                             withContext(Dispatchers.Main) {
-                                services.logIn(username, password)
                                 val intent =
                                     Intent(this@LoginActivity, DrawerNavActivity::class.java)
                                 startActivity(intent)
@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            Toasty.error(this@LoginActivity, e.message!!, Toasty.LENGTH_LONG).show()
+                            e.message?.let { it1 -> Toasty.error(this@LoginActivity, it1, Toasty.LENGTH_LONG).show() }
                         }
                     }
                 }
